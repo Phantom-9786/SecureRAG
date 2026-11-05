@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     frontend_origin: str = "http://localhost:3000"
     database_url: SecretStr | None = None
     database_url_unpooled: SecretStr | None = None
+    database_ipv4_only: bool = False
     embedding_dimensions: int = Field(default=1536, ge=1536, le=1536)
     pdf_storage_root: Path = Path("storage/pdfs")
     pdf_s3_bucket: str | None = None

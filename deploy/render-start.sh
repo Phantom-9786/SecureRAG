@@ -6,6 +6,7 @@ public_port=${PORT:-10000}
 if [[ -z "${FRONTEND_ORIGIN:-}" && -n "${RENDER_EXTERNAL_URL:-}" ]]; then
     export FRONTEND_ORIGIN="$RENDER_EXTERNAL_URL"
 fi
+export DATABASE_IPV4_ONLY="${DATABASE_IPV4_ONLY:-true}"
 sed -e 's/^user nginx;/user www-data;/' \
     -e 's/^worker_processes auto;/worker_processes 1;/' \
     -e "s/listen 80;/listen ${public_port};/" \
