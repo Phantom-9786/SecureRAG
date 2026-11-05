@@ -1,0 +1,43 @@
+name: securerag
+services:
+  api:
+    build: ./backend
+    env_file: ./backend/.env
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost:3000}
+      PDF_STORAGE_ROOT: /app/storage/pdfs
+    volumes:
+      - type: bind
+        source: ${PDF_STORAGE_PATH:-./backend/storage/pdfs}
+        target: /app/storage/pdfs
+    restart: unless-stopped
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    stop_grace_period: 150s
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        API_BASE_URL: http://api:8000
+    environment:
+      HOSTNAME: 0.0.0.0
+      PORT: "3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+  gateway:
+    image: nginx:stable-alpine
+    ports:
+      - "127.0.0.1:${APP_PORT:-3000}:80"
+    volumes:
+      - ./deploy/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      api:
+        condition: service_healthy
+      frontend:
+        condition: service_healthy
+    restart: unless-stopped
