@@ -16,7 +16,7 @@ sed -e 's/^user nginx;/user www-data;/' \
     /opt/securerag/nginx.conf > /tmp/securerag-nginx.conf
 nginx -t -c /tmp/securerag-nginx.conf
 
-setpriv --reuid app --regid app --init-groups \
+HOME=/home/app setpriv --reuid app --regid app --init-groups \
     uvicorn app.main:app --host 127.0.0.1 --port 8000 --workers 1 --no-proxy-headers &
 api_pid=$!
 # The frontend needs no backend secrets.

@@ -17,7 +17,7 @@ COPY --from=uv /uv /bin/uv
 COPY --from=node /usr/local/bin/node /usr/local/bin/node
 RUN apt-get update && apt-get install -y --no-install-recommends nginx util-linux \
     && rm -rf /var/lib/apt/lists/* \
-    && useradd --uid 10001 --no-create-home app \
+    && useradd --uid 10001 --create-home app \
     && install -d -o app -g app /app/storage/pdfs
 COPY backend/pyproject.toml backend/uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
