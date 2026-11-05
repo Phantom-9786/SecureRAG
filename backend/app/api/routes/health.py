@@ -29,6 +29,9 @@ def ready() -> dict[str, str]:
         message = str(driver_error).lower()
         markers = {
             "translate host": "dns",
+            "ipv4 dns lookup failed": "ipv4 dns",
+            "name or service not known": "dns",
+            "temporary failure in name resolution": "dns",
             "timeout expired": "timeout",
             "timed out": "timeout",
             "network is unreachable": "network",
@@ -40,6 +43,14 @@ def ready() -> dict[str, str]:
             "ssl connection": "tls",
             "connection reset": "connection reset",
             "endpoint is disabled": "endpoint disabled",
+            "endpoint id is not specified": "endpoint routing",
+            "ssl syscall error": "tls syscall",
+            "eof detected": "eof",
+            "connection is bad": "connection setup",
+            "invalid response to ssl negotiation": "tls negotiation",
+            "could not receive data from server": "receive failure",
+            "connection failed": "socket connection",
+            "permission denied": "permission denied",
         }
         categories = sorted({category for marker, category in markers.items() if marker in message})
         logger.warning(
