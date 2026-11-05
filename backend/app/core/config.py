@@ -24,6 +24,11 @@ class Settings(BaseSettings):
     database_url_unpooled: SecretStr | None = None
     embedding_dimensions: int = Field(default=1536, ge=1536, le=1536)
     pdf_storage_root: Path = Path("storage/pdfs")
+    pdf_s3_bucket: str | None = None
+    aws_endpoint_url_s3: str | None = None
+    aws_region: str | None = None
+    aws_access_key_id: SecretStr | None = None
+    aws_secret_access_key: SecretStr | None = None
     jwt_secret: SecretStr | None = None
     jwt_access_token_minutes: int = Field(default=30, ge=1, le=120)
     google_client_id: str | None = None
@@ -101,6 +106,18 @@ class Settings(BaseSettings):
         scopes = [(limit.project_id, limit.model) for limit in self.gemini_rate_limits]
         if len(scopes) != len(set(scopes)):
             raise ValueError("Duplicate Gemini project/model rate-limit configuration")
+        return self
+
+    @model_validator(mode="after")
+    def validate_pdf_storage(self) -> "Settings":
+        if self.pdf_s3_bucket and (
+            not self.aws_endpoint_url_s3
+            or not self.aws_endpoint_url_s3.startswith("https://")
+            or not self.aws_region
+            or not self.aws_access_key_id
+            or not self.aws_secret_access_key
+        ):
+            raise ValueError("Private PDF storage requires an HTTPS endpoint, region and credentials")
         return self
 
     @field_validator("jwt_secret")

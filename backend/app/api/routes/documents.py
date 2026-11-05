@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import FileResponse
 from pydantic import ValidationError
 from sqlalchemy import select
+from starlette.background import BackgroundTask
 from starlette.concurrency import run_in_threadpool
 from starlette.datastructures import UploadFile
 from starlette.exceptions import HTTPException as StarletteHTTPException
@@ -172,7 +173,12 @@ def document_details(document_id: UUID, db: Database, session: Authenticated):
 @router.get("/documents/{document_id}/file")
 def download_document(document_id: UUID, db: Database, session: Authenticated, storage: Storage):
     document = visible_document(db, session.user, document_id)
-    path = storage.path_for(document.storage_key)
+    try:
+        path, cleanup = storage.local_copy(document.storage_key)
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Document not found") from None
+    except OSError:
+        raise HTTPException(status_code=503, detail="Private PDF storage is unavailable") from None
     if not path.is_file():
         raise HTTPException(status_code=404, detail="Document not found")
     return FileResponse(
@@ -180,5 +186,6 @@ def download_document(document_id: UUID, db: Database, session: Authenticated, s
         media_type="application/pdf",
         filename=document.original_filename,
         content_disposition_type="attachment",
+        background=BackgroundTask(cleanup) if cleanup is not None else None,
         headers={"Cache-Control": "no-store", "X-Content-Type-Options": "nosniff"},
     )

@@ -101,7 +101,12 @@ def ingest_pdf(
 
     deadline = time.monotonic() + settings.ingestion_timeout_seconds
     try:
-        pages = extract_pages(storage.path_for(key), settings)
+        path, cleanup = storage.local_copy(key)
+        try:
+            pages = extract_pages(path, settings)
+        finally:
+            if cleanup is not None:
+                cleanup()
         chunks = chunk_pages(pages, settings.max_document_chunks)
         vectors = embedder.embed_documents([chunk.content for chunk in chunks], deadline)
         vectors = validate_vectors(vectors, len(chunks), settings.embedding_dimensions)
@@ -154,6 +159,11 @@ def ingest_pdf(
                 "message": str(error),
                 "document_id": str(document_id),
             },
+        ) from None
+    except OSError:
+        mark_failed(db, document_id)
+        raise HTTPException(
+            status_code=503, detail="Private PDF storage is unavailable"
         ) from None
     except HTTPException:
         mark_failed(db, document_id)
