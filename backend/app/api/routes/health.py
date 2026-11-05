@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter, HTTPException
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
@@ -6,6 +8,7 @@ from app.db.schema import SCHEMA_REVISION
 from app.db.session import get_engine
 
 router = APIRouter(tags=["health"])
+logger = logging.getLogger(__name__)
 
 
 @router.get("/health")
@@ -21,7 +24,13 @@ def ready() -> dict[str, str]:
             revision = connection.execute(text("SELECT version_num FROM alembic_version")).scalar()
             if revision != SCHEMA_REVISION:
                 raise RuntimeError("Database migration required")
-    except (RuntimeError, SQLAlchemyError):
+    except (RuntimeError, SQLAlchemyError) as error:
+        driver_error = getattr(error, "orig", None)
+        logger.warning(
+            "Database readiness failed (%s, SQLSTATE %s)",
+            type(error).__name__,
+            getattr(driver_error, "sqlstate", None),
+        )
         # Never return connection strings, credentials, or driver errors to clients.
         raise HTTPException(status_code=503, detail="Database is not ready") from None
     return {"status": "ready"}
