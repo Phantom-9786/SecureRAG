@@ -26,10 +26,27 @@ def ready() -> dict[str, str]:
                 raise RuntimeError("Database migration required")
     except (RuntimeError, SQLAlchemyError) as error:
         driver_error = getattr(error, "orig", None)
+        message = str(driver_error).lower()
+        markers = {
+            "translate host": "dns",
+            "timeout expired": "timeout",
+            "timed out": "timeout",
+            "network is unreachable": "network",
+            "connection refused": "refused",
+            "password authentication failed": "authentication",
+            "channel binding": "channel binding",
+            "certificate verify failed": "certificate",
+            "server closed the connection": "connection closed",
+            "ssl connection": "tls",
+            "connection reset": "connection reset",
+            "endpoint is disabled": "endpoint disabled",
+        }
+        categories = sorted({category for marker, category in markers.items() if marker in message})
         logger.warning(
-            "Database readiness failed (%s, SQLSTATE %s)",
+            "Database readiness failed (%s, SQLSTATE %s, categories %s)",
             type(error).__name__,
             getattr(driver_error, "sqlstate", None),
+            categories,
         )
         # Never return connection strings, credentials, or driver errors to clients.
         raise HTTPException(status_code=503, detail="Database is not ready") from None
