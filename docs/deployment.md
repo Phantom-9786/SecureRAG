@@ -56,9 +56,27 @@ The command prompts privately for a password and refuses if a user already exist
 - A new host using an existing database must restore the matching PDFs too. A database backup alone does not contain originals.
 - Keep .env and .local out of source control, archives and support logs. Do not print a full `docker compose config`, container environment or raw SQL-driver errors; `config --quiet` validates without dumping secrets.
 
-## Public production deployment
+## Live deployment on Render
 
-Public DNS/TLS hosting has not been provisioned by this phase. The Docker package is locally deployed and verified. To publish it on a chosen host:
+The V1 demo runs on a single Render Free Docker service in Singapore using
+`deploy/render.Dockerfile`. Open [SecureRAG](https://securerag-syl4.onrender.com).
+The separate production Neon project holds the database, vectors and private PDFs.
+Render supplies the HTTPS origin, which is registered with Google OAuth.
+
+The live release passed the health and authorization smoke checks. An end-to-end
+test signed in as synthetic Admin and Engineer users, indexed two PDFs, verified
+the authorized PDF download and page citation, and checked that a role change
+revoked PDF and chat history access. The synthetic records and objects were removed.
+
+Run the release check against the live origin after a deployment.
+
+```powershell
+.\backend\.venv\Scripts\python.exe backend/scripts/check_release.py --base-url https://securerag-syl4.onrender.com
+```
+
+## Deploying to another host
+
+The Compose package can also run on a host with persistent disk storage:
 
 1. Configure a separate production Neon branch/database as appropriate and restore matching private files.
 2. Inject production database URLs, JWT secret, Gemini project/key settings and Google OAuth Client ID through the host's secret store or restricted environment file.
