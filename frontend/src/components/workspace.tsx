@@ -18,6 +18,7 @@ import {
   type Answer,
 } from "../lib/api";
 import Login from "./login";
+import DocumentLibrary from "./document-library";
 import MessageView from "./message";
 import AdminPanel from "./admin/panel";
 import { managementTabs } from "../lib/admin";
@@ -42,6 +43,7 @@ export default function Workspace() {
   const sequence = useRef(0);
   const mutation = useRef(false);
   const end = useRef<HTMLDivElement>(null);
+  const composerInput = useRef<HTMLTextAreaElement>(null);
   const currentUserId = useRef<string | null>(null);
 
   const acceptProfile = useCallback((me: Profile) => {
@@ -290,6 +292,7 @@ export default function Workspace() {
         </button>
         <nav aria-label="Main">
           <button
+            aria-current={view === "chat" ? "page" : undefined}
             className={view === "chat" ? "nav-item selected" : "nav-item"}
             onClick={() => setView("chat")}
             disabled={disabled}
@@ -297,6 +300,7 @@ export default function Workspace() {
             ◷ Conversations
           </button>
           <button
+            aria-current={view === "documents" ? "page" : undefined}
             className={view === "documents" ? "nav-item selected" : "nav-item"}
             onClick={() => setView("documents")}
             disabled={disabled}
@@ -305,6 +309,7 @@ export default function Workspace() {
           </button>
           {canManage ? (
             <button
+              aria-current={view === "admin" ? "page" : undefined}
               className={view === "admin" ? "nav-item selected" : "nav-item"}
               disabled={disabled}
               onClick={() => setView("admin")}
@@ -408,43 +413,12 @@ export default function Workspace() {
             locked={signingOut || sending}
           />
         ) : view === "documents" ? (
-          <section className="library">
-            <p className="muted">
-              Documents available to your role. Downloads are checked each time
-              you open them.
-            </p>
-            {loading ? (
-              <p role="status">Loading documents…</p>
-            ) : documents.length ? (
-              <div className="document-grid">
-                {documents.map((doc) => (
-                  <a
-                    className="document-card"
-                    key={doc.id}
-                    href={`/api/v1/documents/${doc.id}/file`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <span className="file-icon">PDF</span>
-                    <span className="badge">
-                      {profile.categories.find(
-                        (cat) => cat.id === doc.category_id,
-                      )?.name ?? "Document"}
-                    </span>
-                    <h2>{doc.title}</h2>
-                    <p>{doc.original_filename}</p>
-                    <span className="document-action">Download original ↗</span>
-                  </a>
-                ))}
-              </div>
-            ) : (
-              <div className="empty-library">
-                <span>▤</span>
-                <h2>No documents available yet</h2>
-                <p>Your administrator can publish documents for your role.</p>
-              </div>
-            )}
-          </section>
+          <DocumentLibrary
+            key={profile.user.id}
+            documents={documents}
+            categories={profile.categories}
+            loading={loading}
+          />
         ) : (
           <>
             <div className="chat-scroll" aria-busy={loading || sending}>
@@ -474,7 +448,14 @@ export default function Workspace() {
                       "What processes do the documents describe?",
                       "Compare the guidance across available documents",
                     ].map((text, i) => (
-                      <button key={text} onClick={() => setDraft(text)}>
+                      <button
+                        key={text}
+                        disabled={disabled}
+                        onClick={() => {
+                          setDraft(text);
+                          composerInput.current?.focus();
+                        }}
+                      >
                         <span>{["↗", "≡", "⇄"][i]}</span>
                         {
                           [
@@ -508,9 +489,16 @@ export default function Workspace() {
                 </label>
                 <textarea
                   id="question"
+                  ref={composerInput}
                   placeholder="Ask a question about your documents…"
                   value={draft}
                   onChange={(event) => setDraft(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" && (event.ctrlKey || event.metaKey) && !event.nativeEvent.isComposing) {
+                      event.preventDefault();
+                      if (!disabled && !loading && draft.trim()) event.currentTarget.form?.requestSubmit();
+                    }
+                  }}
                   maxLength={2000}
                   rows={2}
                   disabled={disabled || loading}
@@ -538,8 +526,7 @@ export default function Workspace() {
                 </div>
               </form>
               <p className="composer-note">
-                Ask a self-contained question. Verify important details in the
-                cited documents.{model ? ` · ${model}` : ""}
+                Ctrl or ⌘ + Enter to send. Open a citation to verify the answer.{model ? ` · ${model}` : ""}
               </p>
             </div>
           </>

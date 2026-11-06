@@ -19,23 +19,26 @@ export default function MessageView({ message }: { message: Message }) {
           {message.content}
         </p>
         {message.sources.length ? (
-          <div className="source-list" aria-label="Answer sources">
-            {message.sources.map((source) => (
-              <a
-                className="source-card"
-                key={source.source_id}
-                href={`/api/v1/documents/${encodeURIComponent(source.document_id)}/file`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span className="source-label">
-                  [{source.source_id}] · PDF · PAGE {source.page_number}
-                </span>
-                <strong>{source.document_title}</strong>
-                <span>Open original ↗</span>
-              </a>
-            ))}
-          </div>
+          <section aria-label="Answer sources">
+            <h2 className="source-heading">Sources · {message.sources.length}</h2>
+            <div className="source-list">
+              {message.sources.map((source) => (
+                <a
+                  className="source-card"
+                  key={source.source_id}
+                  href={`/api/v1/documents/${encodeURIComponent(source.document_id)}/file`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className="source-label">
+                    [{source.source_id}] · PDF · PAGE {source.page_number}
+                  </span>
+                  <strong>{source.document_title}</strong>
+                  <span>Download PDF ↓</span>
+                </a>
+              ))}
+            </div>
+          </section>
         ) : null}
       </div>
     </article>

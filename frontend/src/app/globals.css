@@ -1,11 +1,11 @@
 :root {
-  font-family: Arial, Helvetica, sans-serif;
-  color: #213b37;
-  background: #fcfdfb;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: #202945;
+  background: #f5f6fb;
   color-scheme: light;
-  --green: #176b54;
-  --muted: #657670;
-  --border: #dfe7e2;
+  --accent: #4c43ad;
+  --muted: #59647a;
+  --border: #dce1ed;
 }
 * {
   box-sizing: border-box;
@@ -39,7 +39,7 @@ a:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 3px solid #82bba9;
+  outline: 3px solid #9086eb;
   outline-offset: 3px;
 }
 input,
@@ -57,7 +57,7 @@ p {
   gap: 10px;
   text-decoration: none;
   font-size: 29px;
-  color: var(--green);
+  color: var(--accent);
   font-weight: 700;
   letter-spacing: -1px;
 }
@@ -69,7 +69,7 @@ p {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 2px;
-  color: var(--green);
+  color: var(--accent);
 }
 .small,
 .muted {
@@ -80,7 +80,7 @@ p {
   line-height: 1.6;
 }
 .primary {
-  background: var(--green);
+  background: var(--accent);
   color: #fff;
   padding: 14px 20px;
   border-radius: 8px;
@@ -88,9 +88,9 @@ p {
 }
 .badge {
   display: inline-block;
-  color: var(--green);
-  background: #eaf3ed;
-  border: 1px solid #dceadf;
+  color: var(--accent);
+  background: #eeecfb;
+  border: 1px solid #e4e0f6;
   border-radius: 5px;
   font-size: 10px;
   letter-spacing: 1px;
@@ -103,14 +103,15 @@ p {
 }
 .login-story {
   padding: 48px 64px;
-  background: #e9f0e9;
+  background: #171d35;
+  color: #f3f4ff;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   min-height: 100dvh;
   background-image: radial-gradient(
     ellipse at 20% 90%,
-    #d0e2d6,
+    #433881,
     transparent 65%
   );
 }
@@ -184,7 +185,7 @@ p {
   display: grid;
   place-items: center;
   min-height: 100dvh;
-  color: var(--green);
+  color: var(--accent);
 }
 .workspace {
   display: flex;
@@ -194,7 +195,8 @@ p {
 .sidebar {
   width: 260px;
   flex-shrink: 0;
-  background: #edf2ec;
+  background: #171d35;
+  color: #f3f4ff;
   border-right: 1px solid var(--border);
   padding: 28px 18px 18px;
   display: flex;
@@ -206,15 +208,15 @@ p {
 .workspace-label {
   font-size: 9px;
   letter-spacing: 1.6px;
-  color: #7a8a7f;
+  color: #aab4d1;
   margin: 12px 12px 32px;
 }
 .new-chat {
   padding: 13px 10px;
-  border: 1px solid #cedbd0;
-  background: #fafcf9;
-  border-radius: 8px;
-  color: #275d4c;
+  border: 1px solid #7c70dc;
+  background: #6556ce;
+  border-radius: 10px;
+  color: #fff;
   text-align: left;
   font-size: 13px;
   font-weight: 600;
@@ -226,7 +228,7 @@ p {
   gap: 9px;
   width: 100%;
   background: transparent;
-  color: #56695c;
+  color: #c5cde4;
   border-radius: 7px;
   text-align: left;
   padding: 11px 12px;
@@ -238,14 +240,14 @@ p {
   font-size: 11px;
 }
 .selected {
-  background: #dfe9df !important;
-  color: #235a42 !important;
+  background: #333857 !important;
+  color: #fff !important;
 }
 .recent-heading {
   margin: 32px 12px 13px;
   font-size: 9px;
   letter-spacing: 1.3px;
-  color: #7c8b7e;
+  color: #aab4d1;
 }
 .recent-list {
   overflow: auto;
@@ -265,20 +267,20 @@ p {
   padding: 11px 12px;
   background: transparent;
   font-size: 12px;
-  color: #617366;
+  color: #c5cde4;
   border-radius: 6px;
   margin: 3px 0;
 }
 .chat-link:hover,
 .nav-item:hover {
-  background: #e3ebe2;
+  background: #292f4b;
 }
 .account {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 18px 4px 0;
-  border-top: 1px solid #d8e3d7;
+  border-top: 1px solid #3a4262;
   margin-top: 15px;
 }
 .avatar {
@@ -287,7 +289,7 @@ p {
   height: 33px;
   display: grid;
   place-items: center;
-  background: #d9e6da;
+  background: #3e4570;
   font-size: 12px;
 }
 .account > div:nth-child(2) {
@@ -306,12 +308,12 @@ p {
 }
 .account span {
   font-size: 10px;
-  color: #6f8173;
+  color: #aab4d1;
   margin-top: 4px;
 }
 .account button {
   background: transparent;
-  color: #556b5b;
+  color: #c5cde4;
   font-size: 22px;
 }
 .main-panel {
@@ -322,17 +324,18 @@ p {
 }
 .topbar {
   padding: 23px 38px 20px;
-  border-bottom: 1px solid #e7ece6;
+  border-bottom: 1px solid var(--border);
+  background: #fff;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  min-height: 94px;
+  min-height: 76px;
 }
 .breadcrumb {
   font-size: 9px;
   letter-spacing: 1.5px;
-  color: #8b978e;
+  color: var(--muted);
 }
 .topbar h1 {
   font-size: 16px;
@@ -368,41 +371,41 @@ p {
 }
 .welcome {
   max-width: 780px;
-  margin: clamp(25px, 7vh, 85px) auto 24px;
+  margin: clamp(10px, 3vh, 44px) auto 14px;
   text-align: center;
 }
 .welcome-mark {
   display: grid;
   place-items: center;
-  width: 62px;
-  height: 62px;
+  width: 48px;
+  height: 48px;
   border-radius: 18px;
   background: #eaf2e9;
   color: #448264;
-  font-size: 40px;
-  margin: 0 auto 24px;
+  font-size: 30px;
+  margin: 0 auto 14px;
 }
 .welcome .eyebrow {
   font-size: 9px;
-  color: #8a9d8c;
+  color: var(--accent);
   letter-spacing: 1.6px;
 }
 .welcome h2 {
   font-size: clamp(26px, 3vw, 36px);
   font-weight: 500;
   letter-spacing: -1.1px;
-  margin: 17px 0 14px;
+  margin: 10px 0;
 }
 .welcome > p:not(.eyebrow) {
   font-size: 14px;
   line-height: 1.8;
-  color: #7d8c81;
+  color: var(--muted);
 }
 .suggestions {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  margin-top: 36px;
+  margin-top: 20px;
   text-align: left;
 }
 .suggestions button {
@@ -411,7 +414,7 @@ p {
   border-radius: 10px;
   background: #fff;
   padding: 18px 15px;
-  color: #3c5746;
+  color: #202945;
   font-size: 12px;
   line-height: 1.5;
 }
@@ -422,14 +425,14 @@ p {
 .suggestions span {
   display: block;
   font-size: 22px;
-  color: #769a7d;
-  margin-bottom: 17px;
+  color: var(--accent);
+  margin-bottom: 8px;
 }
 .suggestions small {
   display: block;
   font-size: 11px;
   line-height: 1.6;
-  color: #89968a;
+  color: var(--muted);
   margin-top: 8px;
 }
 .composer-area {
@@ -470,7 +473,7 @@ p {
   line-height: 1.6;
 }
 .composer textarea::placeholder {
-  color: #a0aca1;
+  color: var(--muted);
 }
 .composer-bottom {
   display: flex;
@@ -481,7 +484,7 @@ p {
 }
 .composer-bottom label {
   font-size: 10px;
-  color: #8c988b;
+  color: var(--muted);
 }
 .composer select {
   background: #f5f8f3;
@@ -493,7 +496,7 @@ p {
   max-width: 190px;
 }
 .send-button {
-  background: #276d50;
+  background: var(--accent);
   color: white;
   border-radius: 7px;
   padding: 10px 15px;
@@ -616,10 +619,13 @@ p {
   overflow-wrap: anywhere;
 }
 .file-icon {
-  display: block;
-  font-size: 12px;
-  color: #8b745b;
-  margin-bottom: 24px;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
 }
 .document-card h2 {
   font-size: 17px;
@@ -629,13 +635,13 @@ p {
 }
 .document-card p {
   font-size: 12px;
-  color: #8b9587;
+  color: var(--muted);
   line-height: 1.6;
 }
 .document-action {
   display: block;
   font-size: 11px;
-  color: var(--green);
+  color: var(--accent);
   margin-top: 30px;
 }
 .empty-library {
@@ -650,7 +656,7 @@ p {
   font-size: 22px;
   font-weight: 500;
   margin: 20px 0 12px;
-  color: #42613e;
+  color: inherit;
 }
 .empty-library p {
   font-size: 13px;
@@ -1303,3 +1309,128 @@ td small {
 }
 /* Keep visually hidden captions inside the workspace's scroll boundary. */
 .workspace, .table-scroll { position: relative; }
+
+.sidebar .brand,
+.login-story .brand {
+  color: #f3f4ff;
+}
+.sidebar .small,
+.login-story .eyebrow,
+.login-story > div > p:last-child,
+.login-story .login-foot {
+  color: #c5cde4;
+}
+.main-panel {
+  background: #f5f6fb;
+}
+.login-form,
+.composer,
+.admin-card,
+.document-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px #2029450a;
+}
+.login-form {
+  padding: clamp(22px, 4vw, 38px);
+}
+.welcome-mark,
+.message-avatar,
+.file-icon {
+  background: #ece9fc;
+  color: var(--accent);
+}
+.suggestions button,
+.source-card {
+  background: #fff;
+  border-color: var(--border);
+}
+.suggestions button:hover,
+.source-card:hover,
+.document-card:hover {
+  border-color: #9086eb;
+  background: #faf9ff;
+}
+.composer select,
+.admin-tabs button.active {
+  background: #efedfc;
+  color: var(--accent);
+}
+.quiet,
+.access-line,
+.composer-note,
+.message-meta time {
+  color: var(--muted);
+}
+.library-intro {
+  padding: clamp(20px, 4vw, 32px);
+  margin-bottom: 20px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: linear-gradient(110deg, #eeebfc, #fff 78%);
+}
+.admin-heading {
+  padding: clamp(18px, 3vw, 28px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: linear-gradient(110deg, #eeebfc, #fff 78%);
+}
+.admin-heading p:last-child {
+  margin-bottom: 0;
+}
+.library-intro h2 {
+  margin: 8px 0;
+  font-size: clamp(23px, 3vw, 32px);
+  letter-spacing: -0.035em;
+}
+.library-intro p:last-child {
+  margin-bottom: 0;
+}
+.library-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 220px);
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.library-controls label {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.library-controls :is(input, select) {
+  min-width: 0;
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 11px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: #fff;
+  color: inherit;
+}
+.document-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.source-heading {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+@media (max-width: 460px) {
+  .library-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sidebar nav {
+    min-width: 0;
+    overflow-x: auto;
+  }
+  .sidebar nav .nav-item {
+    flex-shrink: 0;
+    width: auto;
+  }
+}
